@@ -1,0 +1,139 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+
+namespace xml_parsing
+{
+  class Category {
+    public void AddNewCategory(List<string[]> Categories, int i, int j) {
+      // Если не достигнуты максимальные значения индексов.
+      if ((i < Categories.Count) || (j < Categories[i].Length)) {
+        // Цикл, перебирающий строки.
+        //try {
+        for (int m = i; m < Categories.Count; m++) {
+          #region another old shit
+          //try {
+          //  Console.WriteLine("{0} {1}", i, j);
+          //  if ((Categories[m][j] == Categories[m - 1][j]) & (j != Categories[m].Length)) {
+          //    Category NextCategory = new Category();
+          //    NextCategory.AddNewCategory(Categories, m);
+          //  } else {
+          //    //j++;
+          //  }
+          //} finally {
+          //  j = 0;
+          //  Console.WriteLine("Error!");
+          //}
+          #endregion
+          // Цикл, перебирающий столбцы.
+          for (int n = j; n <= Categories[m].Length; n++) {
+            Console.WriteLine("{0} {1}", m, n);
+            // Если категория не была использована для создания класса.
+            if (Categories[m][n] != Categories[m - 1][n]) {
+              Console.WriteLine("Создание класса для категории!", m, n);
+              Category NextCategory = new Category();
+              NextCategory.AddNewCategory(Categories, m, n + 1);
+            } else {
+              Console.WriteLine("Категория уже использована!", m, n);
+              //break;
+              // Category NextCategory = new Category();
+              // NextCategory.AddNewCategory(Categories, m);
+            }
+            Console.WriteLine("{0} {1}", m, n);
+          }
+        }
+        //} finally { }
+      } else { Console.WriteLine("End of line!"); }
+    }
+  }
+
+  #region old shit
+  //class Category
+  //{
+  //  // public string CategoryName = "default";
+  //  public void PrintCategoryName (string[] names) {
+  //    Category NextCategory = new Category();
+  //    if (names.Length != 1) {
+  //      List<string> remainNames = new List<string>();
+  //      foreach (var name in names.Skip(1)) {
+  //        remainNames.Add(name);
+  //      }
+  //      this.PrintCategoryName(remainNames);
+  //      Console.WriteLine(remainNames[0]);
+  //    } else {
+  //      //Console.WriteLine(names[0]);
+  //    }
+  //  }
+  //  public void PrintCategoryName(List<string> names) {
+  //    Category NextCategory = new Category();
+  //    if (names.Count != 1) {
+  //      List<string> remainNames = new List<string>();
+  //      foreach (var item in names.Skip(1)) {
+  //        remainNames.Add(item);
+  //      }
+  //      this.PrintCategoryName(remainNames);
+  //      Console.WriteLine(remainNames[0]);
+  //    } else {
+  //      //Console.WriteLine(names[0]);
+  //    }
+  //  }
+  //}
+  #endregion
+
+  class Program
+  {
+    static void Main(string[] args) {
+      #region old shit
+      //// Задаем разделитель.
+      //Char Delimeter = ';';
+      //// Создается поток.
+      //FileStream FileCSV = new FileStream("../xml-files/12.csv",
+      //                                    FileMode.Open);
+      //StreamReader Reader = new StreamReader(FileCSV);
+      //#region Допилить цикл и считывать по строке?
+      ////Reader.ReadLine();
+      ////while (Reader.EndOfStream == false)
+      ////{
+      ////  string Line = Reader.ReadLine();
+      ////  // Console.WriteLine(Line);
+      ////  // Пилит строку по разделителям.
+      ////  string[] StringCategories = Line.Split(Delimeter);
+      ////  //foreach (string StringCategory in StringCategories)
+      ////  //{
+      ////  //  // Выводим категорию и создаем класс.
+      ////  //  // Console.WriteLine(StringCategory);
+      ////  //  Category FirstCategory = new Category();
+      ////  //  FirstCategory.PrintCategoryName(StringCategory);
+      ////  //  //FirstCategory.PrintCategoryName(StringCategory);
+      ////  //}
+      ////  Category FirstCategory = new Category();
+        
+      ////  FirstCategory.PrintCategoryName(StringCategories);
+      ////  Console.WriteLine(StringCategories[0]);
+      ////}
+      #endregion
+      FileStream FileCSV = new FileStream("../xml-files/12.csv",
+                                          FileMode.Open);
+      StreamReader Reader = new StreamReader(FileCSV);
+      // Reader.ReadLine();
+      string[] NewLineDelimeter = {Environment.NewLine};
+      string Text = Reader.ReadToEnd();
+      string[] Lines = Text.Split(NewLineDelimeter, StringSplitOptions.RemoveEmptyEntries);
+      Char LineDelimeter = ';';
+      List<string[]> Categories = new List<string[]>();
+      foreach (string Line in Lines) {
+        string[] Category = Line.Split(LineDelimeter);
+        Categories.Add(Category);
+      }
+      // Демонстрация работы таблицы.
+      // Console.WriteLine(Categories[1][3]);
+      // Вызов класса, который берет таблицу на вход и пошло-поехало.
+      Category FirstCategory = new Category();
+      FirstCategory.AddNewCategory(Categories, 1, 0);
+      Reader.Close();
+      Console.ReadLine();
+    }
+  }
+}
